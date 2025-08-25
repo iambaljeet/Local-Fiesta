@@ -161,8 +161,8 @@ export function FloatingPrompt({
   };
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-80 md:ml-4 z-50">
-      <Card className="p-4 shadow-lg border-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="p-4">
+      <Card className="p-4 shadow-lg border-2">
         {/* Attachments */}
         {attachments.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2">

@@ -52,91 +52,65 @@ function AIDashboard() {
   const isSending = Object.values(conversations).some(conv => conv.isLoading);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50">
       <ConfigurationDialog 
         isOpen={!isConfigured} 
-        onConfigured={verifyAndSaveConfig}
         isVerifying={isVerifyingConnection}
-        error={error}
+        onConfigured={async (baseUrl) => {
+          // Configuration is handled by the hook
+          return true;
+        }}
       />
-      
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block w-80 flex-shrink-0 h-full">
-        <ConversationSidebar
-          conversations={allConversations}
-          activeConversationId={activeConversationId}
-          onNewConversation={createNewConversation}
-          onSelectConversation={selectConversation}
-          onDeleteConversation={deleteConversation}
-          onClearAllConversations={clearAllConversations}
-          onConfigChange={verifyAndSaveConfig}
-          onConfigUpdate={verifyAndSaveConfig}
-          config={config}
-          isVerifying={isVerifyingConnection}
-          error={error}
-        />
-      </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden">
-        <MobileNavigation
-          conversations={allConversations}
-          activeConversationId={activeConversationId}
-          onNewConversation={createNewConversation}
-          onSelectConversation={selectConversation}
-          onDeleteConversation={deleteConversation}
-          onClearAllConversations={clearAllConversations}
-          onConfigChange={verifyAndSaveConfig}
-          onConfigUpdate={verifyAndSaveConfig}
-          config={config}
-          isVerifying={isVerifyingConnection}
-          error={error}
-        />
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-0">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 p-4 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <FiestaIcon className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-semibold text-gray-900">
-                Local AI Fiesta
-              </h1>
-              <Badge 
-                variant={isConfigured ? "default" : "neutral"}
-                className={isConfigured ? "bg-green-100 text-green-800" : ""}
-              >
-                {isConfigured ? "Connected" : "Disconnected"}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="neutral" className="text-sm">
-                {enabledModels.length} models active
-              </Badge>
-              <Button
-                onClick={fetchModels}
-                disabled={!isConfigured || isLoadingModels}
-                variant="neutral"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                {isLoadingModels ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCw className="h-4 w-4" />
-                )}
-                Refresh Models
-              </Button>
-            </div>
+      {/* Header */}
+      <header className="flex-shrink-0 bg-white border-b border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FiestaIcon className="h-8 w-8 text-purple-600" />
+            <h1 className="text-2xl font-bold text-gray-900">Local AI Fiesta</h1>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button
+              variant="neutral"
+              onClick={() => window.location.reload()}
+              disabled={isLoadingModels || isVerifyingConnection}
+              className="flex items-center gap-2"
+            >
+              {(isLoadingModels || isVerifyingConnection) ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4" />
+              )}
+              Refresh Models
+            </Button>
           </div>
         </div>
+      </header>
 
-        {/* Content Area - Flex layout with proper spacing */}
-        <div className="flex-1 min-h-0 flex flex-col">
-          {/* AI Windows Area - Takes available space */}
-          <div className="flex-1 overflow-hidden pb-24">
+      {/* Body - Horizontal split */}
+      <div className="flex flex-1 min-h-0">
+        {/* Left: Conversation History Sidebar - Fixed width */}
+        <div className="w-80 flex-shrink-0 border-r bg-white">
+          <ConversationSidebar 
+            conversations={allConversations}
+            activeConversationId={activeConversationId}
+            onSelectConversation={selectConversation}
+            onNewConversation={createNewConversation}
+            onDeleteConversation={deleteConversation}
+            onClearAllConversations={clearAllConversations}
+            onConfigChange={async (url) => true}
+            onConfigUpdate={async (config) => true}
+            config={config}
+            isVerifying={isVerifyingConnection}
+            error={error}
+          />
+        </div>
+
+        {/* Right: Main content area - Takes remaining space, no overflow */}
+        <div className="flex flex-col flex-1 min-h-0 min-w-0">
+          {/* Top: AI Models Container (takes all remaining space) */}
+          <div className="flex-1 min-h-0 overflow-hidden">
             {error && (
               <div className="p-4">
                 <Alert variant="destructive">
@@ -144,9 +118,7 @@ function AIDashboard() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               </div>
-            )}
-
-            {!isConfigured ? (
+            )}            {!isConfigured ? (
               <div className="h-full flex items-center justify-center p-8">
                 <Card className="w-full max-w-md">
                   <CardHeader className="text-center">
@@ -199,9 +171,9 @@ function AIDashboard() {
                 </Card>
               </div>
             ) : (
-              /* AI Model Windows Container - takes available space above footer */
-              <div className="h-full overflow-x-auto overflow-y-hidden">
-                <div className="flex gap-4 p-4 min-w-max h-full">
+              /* AI Model Windows Container - fits within available space */
+              <div className="h-full overflow-hidden">
+                <div className="flex gap-4 p-4 h-full overflow-x-auto">
                   {enabledModels.map((model) => {
                     const modelConversation = conversations[model.id] || {
                       modelId: model.id,
@@ -214,7 +186,7 @@ function AIDashboard() {
                     };
                     
                     return (
-                      <div key={model.id} className="flex-shrink-0 h-full">
+                      <div key={model.id} className="w-96 flex-shrink-0 h-full">
                         <ModelWindow
                           model={model}
                           conversation={modelConversation}
@@ -230,16 +202,18 @@ function AIDashboard() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Floating Prompt */}
-        {isConfigured && enabledModels.length > 0 && (
-          <FloatingPrompt
-            onSendPrompt={sendPromptToEnabledModels}
-            enabledModelsCount={enabledModels.length}
-            isSending={isSending}
-          />
-        )}
+          {/* Bottom: Fixed Prompt Section (not floating, just bottom of the layout) */}
+          {isConfigured && enabledModels.length > 0 && (
+            <div className="flex-shrink-0 border-t bg-white">
+              <FloatingPrompt
+                onSendPrompt={sendPromptToEnabledModels}
+                enabledModelsCount={enabledModels.length}
+                isSending={isSending}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

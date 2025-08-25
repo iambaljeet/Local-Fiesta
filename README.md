@@ -84,20 +84,6 @@ npm run dev
     └── ai-models.ts
 ```
 
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env.local` file for custom configuration:
-
-```env
-# Default LM Studio endpoint (optional)
-DEFAULT_LM_STUDIO_URL=http://localhost:1234
-
-# Enable debug logging (optional)
-DEBUG_AI_MODELS=true
-```
-
 ### Model Preferences
 
 Model preferences are automatically saved to browser localStorage:
@@ -196,7 +182,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [LM Studio](https://lmstudio.ai/) for providing an excellent local AI model runner
 - [Vercel](https://vercel.com/) for Next.js and deployment platform
-- [Radix UI](https://radix-ui.com/) for accessible UI components
+- [Shadcn](https://ui.shadcn.com/) for accessible UI components
 - [Tailwind CSS](https://tailwindcss.com/) for styling utilities
 
 ## 🐛 Troubleshooting

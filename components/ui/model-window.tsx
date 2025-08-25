@@ -132,16 +132,20 @@ export function ModelWindow({
   };
 
   return (
-    <Card className="w-80 flex-shrink-0 flex flex-col h-full">
+    <Card className={`flex-shrink-0 flex flex-col h-full w-full transition-opacity ${
+      model.isEnabled ? 'opacity-100' : 'opacity-60'
+    }`}>
       {/* Header - Fixed at top */}
       <div className="flex-shrink-0 bg-card border-b">
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium truncate flex-1 mr-2">
-              {model.name}
+          <div className="flex items-start justify-between gap-2">
+            <CardTitle className="text-sm font-medium flex-1 min-w-0 leading-tight">
+              <div className="line-clamp-2 break-words">
+                {model.name}
+              </div>
             </CardTitle>
-            <div className="flex items-center gap-2">
-              <Badge variant={model.isOnline ? 'default' : 'neutral'} className="text-xs">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Badge variant={model.isOnline ? 'default' : 'neutral'} className="text-xs whitespace-nowrap">
                 {model.isOnline ? 'Online' : 'Offline'}
               </Badge>
               <Switch

@@ -40,6 +40,14 @@ export function FloatingPrompt({
   enabledModelsCount, 
   isSending 
 }: FloatingPromptProps) {
+  // Validate props
+  if (typeof enabledModelsCount !== 'number' || enabledModelsCount < 0) {
+    console.warn('FloatingPrompt: enabledModelsCount must be a non-negative number');
+  }
+  if (typeof isSending !== 'boolean') {
+    console.warn('FloatingPrompt: isSending must be a boolean');
+  }
+
   const [prompt, setPrompt] = useState('');
   const [attachments, setAttachments] = useState<AttachmentFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -177,6 +185,7 @@ export function FloatingPrompt({
                   size="sm"
                   onClick={() => removeAttachment(attachment.id)}
                   className="h-4 w-4 p-0 ml-1"
+                  aria-label={`Remove attachment ${attachment.name}`}
                 >
                   <X className="h-3 w-3" />
                 </Button>
@@ -194,6 +203,8 @@ export function FloatingPrompt({
               placeholder="Type your message... (Cmd/Ctrl + Enter to send)"
               className="min-h-[60px] resize-none"
               disabled={isSending}
+              aria-label="Message input"
+              aria-describedby="prompt-help"
             />
           </div>
           
@@ -213,6 +224,7 @@ export function FloatingPrompt({
               onClick={() => fileInputRef.current?.click()}
               disabled={isSending}
               className="h-10 w-10 p-0"
+              aria-label="Attach file"
             >
               <Paperclip className="h-4 w-4" />
             </Button>
@@ -221,6 +233,7 @@ export function FloatingPrompt({
               onClick={handleSend}
               disabled={isSending || enabledModelsCount === 0}
               className="h-10 w-10 p-0"
+              aria-label={isSending ? "Sending message..." : "Send message"}
             >
               {isSending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -233,7 +246,7 @@ export function FloatingPrompt({
 
         {/* Status */}
         <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-          <span>
+          <span id="prompt-help">
             {enabledModelsCount > 0 
               ? `Will send to ${enabledModelsCount} enabled model${enabledModelsCount > 1 ? 's' : ''}`
               : 'No models enabled'

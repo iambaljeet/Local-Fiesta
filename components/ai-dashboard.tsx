@@ -15,12 +15,12 @@ import { RefreshCw, AlertCircle, Loader2 } from 'lucide-react';
 import { FiestaIcon } from '@/components/ui/fiesta-icon';
 
 /**
- * Local AI Fiesta Component
+ * Local AI Fiesta Dashboard Component
  * Contract:
- * - Manages multiple AI model conversations
- * - Provides sidebar for history and configuration
- * - Supports mobile navigation
- * - Handles model configuration and connection
+ * - Inputs: none (self-contained dashboard)
+ * - Output: Complete dashboard UI with sidebar, models, and prompt
+ * - Errors: NetworkError, ConfigurationError displayed in UI alerts
+ * - Side effects: localStorage updates, network requests to LM Studio API
  */
 function AIDashboard() {
   const {
@@ -140,7 +140,7 @@ function AIDashboard() {
                   </CardContent>
                 </Card>
               </div>
-            ) : enabledModels.length === 0 ? (
+            ) : models.length === 0 ? (
               <div className="h-full flex items-center justify-center p-8">
                 <Card className="w-full max-w-md">
                   <CardHeader className="text-center">
@@ -173,20 +173,27 @@ function AIDashboard() {
             ) : (
               /* AI Model Windows Container - fits within available space */
               <div className="h-full overflow-hidden">
-                <div className="flex gap-4 p-4 h-full overflow-x-auto">
-                  {enabledModels.map((model) => {
-                    const modelConversation = conversations[model.id] || {
-                      modelId: model.id,
-                      messages: [],
-                      isLoading: false,
-                      error: undefined,
-                      retryCount: 0,
-                      canRetry: false,
-                      lastFailedPrompt: undefined
-                    };
+                <div className="flex gap-2 p-3 h-full overflow-x-auto">
+                  {[...models]
+                    .sort((a, b) => {
+                      // Sort enabled models first, then disabled ones
+                      if (a.isEnabled && !b.isEnabled) return -1;
+                      if (!a.isEnabled && b.isEnabled) return 1;
+                      return 0; // Keep original order within same enabled state
+                    })
+                    .map((model) => {
+                      const modelConversation = conversations[model.id] || {
+                        modelId: model.id,
+                        messages: [],
+                        isLoading: false,
+                        error: undefined,
+                        retryCount: 0,
+                        canRetry: false,
+                        lastFailedPrompt: undefined
+                      };
                     
                     return (
-                      <div key={model.id} className="w-96 flex-shrink-0 h-full">
+                      <div key={model.id} className="w-80 flex-shrink-0 h-full">
                         <ModelWindow
                           model={model}
                           conversation={modelConversation}

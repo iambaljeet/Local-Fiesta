@@ -1,6 +1,6 @@
 # Local AI Fiesta 🎉
 
-A powerful web application for managing and interacting with multiple AI models running locally through LM Studio. Experience the convenience of having multiple AI conversations side-by-side in a single, beautifully designed interface.
+Experience the local version of AI Fiesta: a powerful, privacy-focused web application for managing and interacting with multiple AI models on your own machine. Running through LM Studio, this app offers unlimited usage and lets you have multiple AI conversations side-by-side in a single, beautifully designed interface.
 
 ## ✨ Features
 

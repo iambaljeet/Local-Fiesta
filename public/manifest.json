@@ -1,0 +1,25 @@
+{
+  "name": "Local AI Fiesta",
+  "short_name": "AI Fiesta",
+  "description": "Your local AI party hub - Connect, chat, and manage multiple AI models simultaneously from LM Studio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFE66D",
+  "theme_color": "#FFE66D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/fiesta-icon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "developer", "utilities"],
+  "lang": "en"
+}

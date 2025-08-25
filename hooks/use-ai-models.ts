@@ -139,6 +139,8 @@ export function useAIModels(): UseAIModelsReturn {
   }, [mounted, allConversations.length, activeConversationId]);
 
   // Load conversation messages when activeConversationId changes or on mount
+  // Note: We don't include 'models' in the dependency array to prevent reloading
+  // conversations when models are enabled/disabled, which would cause contamination
   useEffect(() => {
     if (mounted && activeConversationId && models.length > 0) {
       const conversation = conversationService.getConversation(activeConversationId);
@@ -164,7 +166,7 @@ export function useAIModels(): UseAIModelsReturn {
         });
       }
     }
-  }, [mounted, activeConversationId, models]);
+  }, [mounted, activeConversationId]); // Removed 'models' dependency to prevent conversation contamination
 
   const verifyAndSaveConfig = useCallback(async (baseUrl: string): Promise<boolean> => {
     setIsVerifyingConnection(true);

@@ -2,6 +2,13 @@
 
 Experience the local version of AI Fiesta: a powerful, privacy-focused web application for managing and interacting with multiple AI models on your own machine. Running through LM Studio, this app offers unlimited usage and lets you have multiple AI conversations side-by-side in a single, beautifully designed interface.
 
+<!-- DEMO VIDEO: Full width below title and description -->
+<p align="center">
+  <video src="https://github.com/iambaljeet/Local-Fiesta/blob/main/Local%20AI-Fiesta%20DEMO.mp4" controls style="width:100%;max-width:1000px;">
+    Your browser does not support the video tag.
+  </video>
+</p>
+
 ## ✨ Features
 
 - **Multi-Model Chat Interface**: Chat with multiple AI models simultaneously in side-by-side windows
